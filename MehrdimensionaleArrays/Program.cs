@@ -13,9 +13,14 @@ namespace MehrdimensionaleArrays
 
         private static int platzNummer = 1;
         private static string output = "";
+       // private static int selection = 0;
+        private static bool isNotValid = true;
+        private static string errMsgInt = "Ungueltige Eingabe. Bitte ganze Zahl eingeben!";
+        private static string errMsgNegInt = "Negative Zahlen sind nicht zulaessig! Bitte erneut ";
+        private static int checkedInt=0;
 
         // Ausgabe der Platzbelegung
-        private void ShowSeatAssignment()
+        private static void ShowSeatAssignment()
         {
             for (int reihe = 0; reihe < sitzPlatzPosition.GetLength(0); reihe++)
             {
@@ -38,20 +43,69 @@ namespace MehrdimensionaleArrays
             Console.Read();
         }
 
+        private static void Menu()
+        {
+            Console.WriteLine("\t\tSitzplatzreservierung");
+
+            Console.WriteLine("\nMenu");
+            Console.WriteLine("Bitte Zahl eingeben");
+            Console.WriteLine("{0}) {1}", 1, "Zeige Platzbelegung");
+            Console.WriteLine("{0}) {1}", 2, "Sitzplatzreservierung");
+
+        }
+        private static void CheckInt()
+        {
+            do
+            {
+                try
+                {
+                    //isNotValid = (checkedInt < 1) ? false : Console.WriteLine(); ;
+                    checkedInt = int.Parse(Console.ReadLine());
+                    if (checkedInt < 1)
+                    {
+                        Console.WriteLine(errMsgNegInt);
+                    }
+                    else
+                    {
+                        isNotValid = false;
+                    }
+                }
+                catch (Exception)
+                {
+                    Console.WriteLine(errMsgInt);
+                }
+            }
+            while (isNotValid);
+        }
+
         static void Main(string[] args)
-            //Sitzplaetze = 10 Reihen mit jeweils 20 Plaetzen
+        //Sitzplaetze = 10 Reihen mit jeweils 20 Plaetzen
         {   //[Y,X] Achse
-            //StandardWert bool=false
-            sitzPlatzPosition = new bool[10,20];
+            //false = frei
 
-            //SitzPlatz Reihe 5 Platz 15 besetzen = true
-            //sitzPlatzPosition[5, 15] = true;
+            sitzPlatzPosition = new bool[10, 20];
+            Menu();
+            CheckInt();
 
-           
-            
-            
-           
-            
+            switch (checkedInt)
+            {
+                case 1:
+                    ShowSeatAssignment();
+                    Console.ReadLine();
+                    break;
+                case 2:
+
+                    break;
+
+                default:
+                    break;
+            }
+            //  ShowSeatAssignment();
+
+
+
+
+
 
 
         }
