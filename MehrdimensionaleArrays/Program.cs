@@ -12,6 +12,31 @@ namespace MehrdimensionaleArrays
         private static bool[,] sitzPlatzPosition;
 
         private static int platzNummer = 1;
+        private static string output = "";
+
+        // Ausgabe der Platzbelegung
+        private void ShowSeatAssignment()
+        {
+            for (int reihe = 0; reihe < sitzPlatzPosition.GetLength(0); reihe++)
+            {
+                for (int platz = 0; platz < sitzPlatzPosition.GetLength(1); platz++)
+                {
+                    if (sitzPlatzPosition[reihe, platz] == false)
+                    {
+                        output = String.Format(" {0,3} {1}", platzNummer++, "Free   ");
+
+                        Console.Write(output);
+                    }
+                    else
+                    {
+                        output = String.Format(" {0,3} {1}", platzNummer++, "Not Free");
+                        Console.Write(output);
+                    }
+                }
+                Console.WriteLine();
+            }
+            Console.Read();
+        }
 
         static void Main(string[] args)
             //Sitzplaetze = 10 Reihen mit jeweils 20 Plaetzen
@@ -20,32 +45,12 @@ namespace MehrdimensionaleArrays
             sitzPlatzPosition = new bool[10,20];
 
             //SitzPlatz Reihe 5 Platz 15 besetzen = true
-            sitzPlatzPosition[5, 15] = true;
-
-            // Ausgabe der Platzbelegung
-
-            for (int reihe = 0; reihe < sitzPlatzPosition.GetLength(0); reihe++)
-            {
-                for (int platz = 0; platz < sitzPlatzPosition.GetLength(1); platz++)
-                {
-                    if (sitzPlatzPosition[reihe,platz] == false)
-                    {
-                        Console.Write(" " + platzNummer++ + " ");
-                        Console.Write("O");
-                    }
-                    else
-                    {
-                        Console.Write(" "+platzNummer+++" ");
-                        Console.Write("X");
-                    }
-                }
-                Console.WriteLine();
-            }
-            Console.Read();
+            //sitzPlatzPosition[5, 15] = true;
 
            
-
-            //instanziieren
+            
+            
+           
             
 
 
