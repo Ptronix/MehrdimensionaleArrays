@@ -28,9 +28,16 @@ namespace MehrdimensionaleArrays
             {
                 for (int platz = 0; platz < sitzPlatzPosition.GetLength(1); platz++)
                 {
-                    Console.Write(" " + platzNummer++ + " ");
-                    Console.Write(sitzPlatzPosition[reihe,platz]);
-                    
+                    if (sitzPlatzPosition[reihe,platz] == false)
+                    {
+                        Console.Write(" " + platzNummer++ + " ");
+                        Console.Write("O");
+                    }
+                    else
+                    {
+                        Console.Write(" "+platzNummer+++" ");
+                        Console.Write("X");
+                    }
                 }
                 Console.WriteLine();
             }
