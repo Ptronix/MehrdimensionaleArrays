@@ -17,6 +17,7 @@ namespace MehrdimensionaleArrays
         private static bool isNotValid = true;
         private static string errMsgInt = "Ungueltige Eingabe. Bitte ganze Zahl eingeben!";
         private static string errMsgNegInt = "Negative Zahlen sind nicht zulaessig! Bitte erneut ";
+        
         private static int checkedInt=0;
 
         // Ausgabe der Platzbelegung
@@ -78,6 +79,74 @@ namespace MehrdimensionaleArrays
             while (isNotValid);
         }
 
+        private static void IsValidSeat()
+        {
+            do
+            {
+                try
+                {
+                    checkedInt = int.Parse(Console.ReadLine());
+                    if (checkedInt < 1)
+                    {
+                        Console.WriteLine(errMsgNegInt);
+                    }
+                    else if (checkedInt > sitzPlatzPosition.Length)
+                    {
+                        Console.WriteLine("Sie moechten mehr Sitze reservieren als vorhanden. Es gibt maximal {0} Sitzplaetze!",sitzPlatzPosition.Length);
+                    }
+                    else
+                    {
+                        isNotValid = false;
+                    }
+                }
+                catch (Exception)
+                {
+                    Console.WriteLine(errMsgInt);
+                }
+            }
+            while (isNotValid);
+        }
+
+        private static void Sitzplatzreservierung()
+        {
+            Console.WriteLine("Wie viele Pleatze moechten Sie reservieren?)");
+            IsValidSeat();
+            Console.WriteLine("In welcher Reihe möchten Sie die Sitze reservieren?");
+            IsvalidRow();
+            
+            
+        }
+        private static void IsvalidRow()
+        {
+            {
+                do
+                {
+                    isNotValid = true;
+                    try
+                    {
+                        checkedInt = int.Parse(Console.ReadLine()) - 1;
+                        if (checkedInt < 0)
+                        {
+                            Console.WriteLine(errMsgNegInt);
+                        }
+                        else if (checkedInt > sitzPlatzPosition.GetLength(0))
+                        {
+                            Console.WriteLine("Die Sitzplatzreihe {0} existiert nicht! Bitte Waehlen Sie eine Reihe Zwischen 1 und 20 aus.", sitzPlatzPosition.GetLength(0));
+                        }
+                        else
+                        {
+                            isNotValid = false;
+                        }
+                    }
+                    catch (Exception)
+                    {
+                        Console.WriteLine(errMsgInt);
+                    }
+                }
+                while (isNotValid);
+            }
+        }
+
         static void Main(string[] args)
         //Sitzplaetze = 10 Reihen mit jeweils 20 Plaetzen
         {   //[Y,X] Achse
@@ -94,13 +163,16 @@ namespace MehrdimensionaleArrays
                     Console.ReadLine();
                     break;
                 case 2:
-
+                    Sitzplatzreservierung();
+                    Console.ReadLine();
+                    //TODO
+                    //Check if there are enough seats and make a suggestion
                     break;
 
                 default:
                     break;
             }
-            //  ShowSeatAssignment();
+            
 
 
 
