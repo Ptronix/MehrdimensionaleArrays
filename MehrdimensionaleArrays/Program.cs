@@ -52,9 +52,9 @@ namespace MehrdimensionaleArrays
         private static void Menu()
         {
             Console.WriteLine("\t\tSitzplatzreservierung");
-
-            Console.WriteLine("\nMenu");
+         
             Console.WriteLine("Bitte Zahl eingeben");
+            Console.WriteLine();
             Console.WriteLine("{0}) {1}", 1, "Zeige Platzbelegung");
             Console.WriteLine("{0}) {1}", 2, "Sitzplatzreservierung");
 
@@ -86,6 +86,7 @@ namespace MehrdimensionaleArrays
 
         private static void IsValidSeat()
         {
+            isNotValid = true;
             do
             {
                 try
@@ -95,10 +96,18 @@ namespace MehrdimensionaleArrays
                     {
                         Console.WriteLine(errMsgNegInt);
                     }
-                    //Array durchlaufen und die freien Sitze ermitteln
+                    
                     else if (seatOrderInt > sitzPlatzPosition.Length)
                     {
-                        Console.WriteLine("Sie moechten mehr Sitze reservieren als vorhanden. Es gibt maximal {0} Sitzplaetze!",sitzPlatzPosition.Length);
+                       // Console.WriteLine("Sie moechten mehr Sitze reservieren als vorhanden. Es gibt maximal {0} Sitzplaetze!",sitzPlatzPosition.Length);
+                    }
+                    else if(CountFreeSeatsInRow() < seatOrderInt)
+                    {
+                        Console.Write("Sie koennen maximal {0} Sitze reservieren,jedoch keine {1}",freeSeatsinRow, seatOrderInt);
+                    }
+                    else if (CountFreeSeatsInRow()<seatOrderInt)
+                    {
+
                     }
                     else
                     {
@@ -115,14 +124,12 @@ namespace MehrdimensionaleArrays
 
         private static void Sitzplatzreservierung()
         {
-            Console.WriteLine("Wie viele Pleatze moechten Sie reservieren?)");
-            IsValidSeat();
-            Console.WriteLine("In welcher Reihe möchten Sie die Sitze reservieren?");
+            Console.Clear();
+            Console.Write("In welcher Reihe möchten Sie die Sitze reservieren? :");
             IsvalidRow();
 
-
-            
-
+            Console.Write("Wie viele Pleatze moechten Sie reservieren? :");
+            IsValidSeat();
             
         }
         private static void IsvalidRow()
@@ -155,14 +162,12 @@ namespace MehrdimensionaleArrays
                 while (isNotValid);
             }
         }
-        public static void FreeSeats()
+        public static void SeatSuggestion()
         {
-            int tempCount = 0;
             for (int i = seatOrderInt; i != 0 ; i--)
             {
                 if (sitzPlatzPosition[rowOfSeats, i].Equals(false) )
                 {
-                    tempCount++;
                     seatSuggestion +=i+","; 
                 }
                 else
@@ -173,8 +178,20 @@ namespace MehrdimensionaleArrays
                     }
                 }
             }
-
         }
+        public static int CountFreeSeatsInRow()
+        {
+            for (int i = 0; i < sitzPlatzPosition.GetLength(1); i++)
+            {
+                if (sitzPlatzPosition[rowOfSeats, i].Equals(false))
+                {
+                    freeSeatsinRow++;
+                } 
+            }
+            return freeSeatsinRow;
+        }   
+        
+
 
         static void Main(string[] args)
         //Sitzplaetze = 10 Reihen mit jeweils 20 Plaetzen
@@ -193,7 +210,7 @@ namespace MehrdimensionaleArrays
                     break;
                 case 2:
                     Sitzplatzreservierung();                  
-                    FreeSeats();
+                    SeatSuggestion();
                     Console.WriteLine(seatSuggestion);
                     
                     Console.ReadLine();
