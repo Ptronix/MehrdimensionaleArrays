@@ -64,7 +64,13 @@ namespace MehrdimensionaleArrays
                 try
                 {
                     checkedInt = int.Parse(Console.ReadLine());
-                    if (checkedInt < 1)
+                    
+                    if (checkedInt == 0 || checkedInt > 2)
+                    {
+                        Console.WriteLine("Die {0} ist keine gueltige Auswahl!",checkedInt);
+                    }
+                    
+                    else if (checkedInt < 0)
                     {
                         Console.WriteLine(errMsgNegInt);
                     }
