@@ -17,7 +17,12 @@ namespace MehrdimensionaleArrays
         private static bool isNotValid = true;
         private static string errMsgInt = "Ungueltige Eingabe. Bitte ganze Zahl eingeben!";
         private static string errMsgNegInt = "Negative Zahlen sind nicht zulaessig! Bitte erneut ";
-        
+        private static int seatOrderInt = 0;
+        private static int rowOfSeats = 0;
+        private static int freeSeatsinRow = 0;
+        private static string seatSuggestion = "";
+
+        //warscheinlich nicht nötig
         private static int checkedInt=0;
 
         // Ausgabe der Platzbelegung
@@ -29,7 +34,7 @@ namespace MehrdimensionaleArrays
                 {
                     if (sitzPlatzPosition[reihe, platz] == false)
                     {
-                        output = String.Format(" {0,3} {1}", platzNummer++, "Free   ");
+                        output = String.Format(" {0,3} {1}", platzNummer++, "Free");
 
                         Console.Write(output);
                     }
@@ -85,12 +90,13 @@ namespace MehrdimensionaleArrays
             {
                 try
                 {
-                    checkedInt = int.Parse(Console.ReadLine());
-                    if (checkedInt < 1)
+                    seatOrderInt = int.Parse(Console.ReadLine());
+                    if (seatOrderInt < 1)
                     {
                         Console.WriteLine(errMsgNegInt);
                     }
-                    else if (checkedInt > sitzPlatzPosition.Length)
+                    //Array durchlaufen und die freien Sitze ermitteln
+                    else if (seatOrderInt > sitzPlatzPosition.Length)
                     {
                         Console.WriteLine("Sie moechten mehr Sitze reservieren als vorhanden. Es gibt maximal {0} Sitzplaetze!",sitzPlatzPosition.Length);
                     }
@@ -113,7 +119,10 @@ namespace MehrdimensionaleArrays
             IsValidSeat();
             Console.WriteLine("In welcher Reihe möchten Sie die Sitze reservieren?");
             IsvalidRow();
+
+
             
+
             
         }
         private static void IsvalidRow()
@@ -124,14 +133,14 @@ namespace MehrdimensionaleArrays
                     isNotValid = true;
                     try
                     {
-                        checkedInt = int.Parse(Console.ReadLine()) - 1;
-                        if (checkedInt < 0)
+                        rowOfSeats = int.Parse(Console.ReadLine()) - 1;
+                        if (rowOfSeats < 0)
                         {
                             Console.WriteLine(errMsgNegInt);
                         }
-                        else if (checkedInt > sitzPlatzPosition.GetLength(0))
+                        else if (rowOfSeats > sitzPlatzPosition.GetLength(0))
                         {
-                            Console.WriteLine("Die Sitzplatzreihe {0} existiert nicht! Bitte Waehlen Sie eine Reihe Zwischen 1 und 20 aus.", sitzPlatzPosition.GetLength(0));
+                            Console.WriteLine("Die Sitzplatzreihe {0} existiert nicht! Bitte Waehlen Sie eine Reihe Zwischen 0 und 11 aus.", rowOfSeats);
                         }
                         else
                         {
@@ -145,6 +154,26 @@ namespace MehrdimensionaleArrays
                 }
                 while (isNotValid);
             }
+        }
+        public static void FreeSeats()
+        {
+            int tempCount = 0;
+            for (int i = seatOrderInt; i != 0 ; i--)
+            {
+                if (sitzPlatzPosition[rowOfSeats, i].Equals(false) )
+                {
+                    tempCount++;
+                    seatSuggestion +=i+","; 
+                }
+                else
+                {
+                    if (sitzPlatzPosition[rowOfSeats, i].Equals(true))
+                    {
+                        //erstmal nichts machen
+                    }
+                }
+            }
+
         }
 
         static void Main(string[] args)
@@ -163,8 +192,16 @@ namespace MehrdimensionaleArrays
                     Console.ReadLine();
                     break;
                 case 2:
-                    Sitzplatzreservierung();
+                    Sitzplatzreservierung();                  
+                    FreeSeats();
+                    Console.WriteLine(seatSuggestion);
+                    
                     Console.ReadLine();
+
+
+
+
+
                     //TODO
                     //Check if there are enough seats and make a suggestion
                     break;
