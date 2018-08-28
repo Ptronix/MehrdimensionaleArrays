@@ -8,6 +8,14 @@ namespace MehrdimensionaleArrays
 {
     class Program
     {
+        static void Main(string[] args)
+        {
+
+        }
+    }
+
+    class oldProgramm
+    { 
         //Deklaration des arrays
         private static bool[,] sitzPlatzPosition;
         private static int[] tempSeatPosition;
@@ -281,7 +289,7 @@ namespace MehrdimensionaleArrays
                 }
             
         }
-        static void Main(string[] args)
+        static void OldMain(string[] args)
         //Sitzplaetze = 10 Reihen mit jeweils 20 Plaetzen
         {   //[Y,X] Achse
             //false = frei
