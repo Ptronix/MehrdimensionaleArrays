@@ -10,8 +10,9 @@ namespace MehrdimensionaleArrays
     {
         //Deklaration des arrays
         private static bool[,] sitzPlatzPosition;
+        private static int[] tempSeatPosition;
 
-        private static int platzNummer = 1;
+        private static int platzNummer;
         private static string output = "";
         private static bool isNotValid = true;
         private static string errMsgInt = "Ungueltige Eingabe. Bitte ganze Zahl eingeben!";
@@ -21,17 +22,17 @@ namespace MehrdimensionaleArrays
         private static int freeSeatsinRow = 0;
         private static string seatSuggestion = "";
         private static int checkedInt=0;
-        
-        
+            
         // Ausgabe der Platzbelegung
         private static void ShowSeatAssignment()
         {
+            platzNummer = 1;
             for (int reihe = 0; reihe < sitzPlatzPosition.GetLength(0); reihe++)
             {
                 for (int platz = 0; platz < sitzPlatzPosition.GetLength(1); platz++)
                 {
                     if (sitzPlatzPosition[reihe, platz] == false)
-                    {
+                    {//.padleft4
                         output = string.Format(" {0,3} ", platzNummer++, "");
                         Console.ForegroundColor = ConsoleColor.Green;
                         Console.Write(output);
@@ -45,7 +46,8 @@ namespace MehrdimensionaleArrays
                 }
                 Console.WriteLine();
             }
-            CheckInt();
+            Console.ForegroundColor = ConsoleColor.White;
+            Console.ReadKey();
         }
 
         private static void Menu()
@@ -57,6 +59,7 @@ namespace MehrdimensionaleArrays
             Console.Write("{0}) {1}", 1, "Zeige Platzbelegung\t\t");
             Console.Write("{0}) {1}", 2, "Sitzplatzreservierung\t\t");
             Console.WriteLine("{0}) {1}",0,"Abbruch");
+            Console.ForegroundColor = ConsoleColor.White;
         }
         private static void CheckInt()
         {
@@ -98,7 +101,7 @@ namespace MehrdimensionaleArrays
             do
             {
                 try
-                {
+                {   //0 als exit char muss noch konfiguriert werden.
                     seatOrderInt = int.Parse(Console.ReadLine());
                    if (seatOrderInt < 1)
                     {
@@ -107,7 +110,7 @@ namespace MehrdimensionaleArrays
                     
                     else if (seatOrderInt > sitzPlatzPosition.Length)
                     {
-                       // Console.WriteLine("Sie moechten mehr Sitze reservieren als vorhanden. Es gibt maximal {0} Sitzplaetze!",sitzPlatzPosition.Length);
+                        Console.WriteLine("Sie moechten mehr Sitze reservieren als vorhanden. Es gibt maximal {0} Sitzplaetze!",sitzPlatzPosition.Length);
                     }
                     else if(CountFreeSeatsInRow() < seatOrderInt)
                     {
@@ -115,7 +118,8 @@ namespace MehrdimensionaleArrays
                     }
                     else if (freeSeatsinRow < seatOrderInt)
                     {
-                        Console.WriteLine("CountFreeSeatsInRow()<seatOrderInt");
+                        Console.WriteLine("Es gibt in der Sitzplatzreihe {0} keine {1} freien Sitze",rowOfSeats,seatOrderInt);
+
                     }
                     else
                     {
@@ -138,6 +142,9 @@ namespace MehrdimensionaleArrays
             Console.Write("Wie viele Pleatze moechten Sie reservieren? :");
             IsValidSeat();  
         }
+        
+        
+
         private static void IsvalidRow()
         {
             {
@@ -153,7 +160,7 @@ namespace MehrdimensionaleArrays
                         }
                         else if (rowOfSeats > sitzPlatzPosition.GetLength(0))
                         {
-                            Console.WriteLine("Die Sitzplatzreihe {0} existiert nicht! Bitte Waehlen Sie eine Reihe Zwischen 0 und 11 aus.", rowOfSeats);
+                            Console.WriteLine("Die Sitzplatzreihe {0} existiert nicht! Bitte Waehlen Sie eine Reihe von 1 bis 10 aus.", rowOfSeats);
                         }
                         else
                         {
@@ -168,26 +175,75 @@ namespace MehrdimensionaleArrays
                 while (isNotValid);
             }
         }
-        public static void SeatSuggestion()
-        {
+        //public static void SeatSuggestion()
+        //{
             
-            for (int i = seatOrderInt; i != 0 ; i--)
-            {
-                if (sitzPlatzPosition[rowOfSeats, i].Equals(false) )
-                {
-                    seatSuggestion +=i+",";
+        //    for (int i = seatOrderInt; i != 0 ; i--)
+        //    {
+        //        if (sitzPlatzPosition[rowOfSeats, i].Equals(false) )
+        //        {
+        //            seatSuggestion +=i+" ";
+
                     
-                    sitzPlatzPosition[rowOfSeats, i] = true;
-                }
-                else
-                {
-                    if (sitzPlatzPosition[rowOfSeats, i].Equals(true))
+        //            sitzPlatzPosition[rowOfSeats, i] = true;
+        //        }
+        //        else
+        //        {
+        //            if (sitzPlatzPosition[rowOfSeats, i].Equals(true))
+        //            {
+        //                //erstmal nichts machen
+        //            }
+        //        }
+        //    }
+        //}
+        public void CheckAndBookSeats()
+        {
+            string temp = "";
+            tempSeatPosition = new int[seatOrderInt];
+            bool enoughSeatsInRow = false;
+            int countCoherentlySeats = 0;
+            do
+            {
+                {//Genug sitze nebeneinander in reihe?
+                    //Sitzreihe durchlaufen
+                    for (int i = 0; i < 20; i++)
                     {
-                        //erstmal nichts machen
+                        for (int p = 0; p < seatOrderInt; p++)
+                        {
+                            if (sitzPlatzPosition[rowOfSeats, i] == false)
+                            { //wenn Sitz frei
+                              
+                                tempSeatPosition[seatOrderInt - countCoherentlySeats] = i;
+                                countCoherentlySeats++;
+                            }
+                            //testen ob letzte reihe, dann nächste reihe = 0
+                            if (sitzPlatzPosition[rowOfSeats, i] == true)
+                                // dann ab nächstem Platz von vorne beginnen
+                                countCoherentlySeats = 0;
+                            
+                            {//wenn letzte reihe und letzter Platz dann in der ersten reihe weitersuchen
+                                if (rowOfSeats == 19 && i==19)
+                                {
+                                    rowOfSeats = 0;
+                                    Console.WriteLine("In der Reihe {0} gibt es leider nicht genug nebeneinander liegende Sitze.", rowOfSeats);
+                                    Console.WriteLine("Es wird nun versucht in Reihe {0} {1} freie Sitze zu finden.", rowOfSeats, seatOrderInt);
+                                    CheckAndBookSeats();
+                                }
+                                Console.WriteLine("In Reihe {0} gibt es keine {1} nebeneinander liegende Sitze", rowOfSeats, seatOrderInt);
+
+                                Console.WriteLine("Reihe {0} wird nun auf genung Nebeneinander liegenede Sitze überprüft...", rowOfSeats + 1);
+                                //nächste reihe prüfen...
+                            }
+                        }
+                        
                     }
-                }
-            }
+
+                } while (true);
+
+            } while (countCoherentlySeats != seatOrderInt);
+  
         }
+
         public static int CountFreeSeatsInRow()
         {
             for (int i = 0; i < sitzPlatzPosition.GetLength(1); i++)
@@ -202,34 +258,29 @@ namespace MehrdimensionaleArrays
 
         private static void SwitchOption()
         {
-            switch (checkedInt)
-            {
-                case 0:
-                default:
-                    Console.WriteLine("Programm wird beendet...");
-                    Console.ReadKey();
-                    break;
-                case 1:
-                    ShowSeatAssignment();
+            
+                switch (checkedInt)
+                {
+                    //case 0:
+                    //default:
+                    //    Console.WriteLine("Programm wird beendet...");
+                    //    Console.ReadKey();
+                    //    break;
+                    case 1:
+                        ShowSeatAssignment();
 
-                    Menu();
-                    CheckInt();
-                    
-                    break;
-                case 2:
+                        break;
+                    case 2:
 
-                    Sitzplatzreservierung();
-                    SeatSuggestion();
-                    Console.WriteLine("Folgende Plaetze sind fuer Sie vorgesehen: {0}", seatSuggestion);
-                    Menu();
-                    CheckInt();
+                        Sitzplatzreservierung();
+                        //SeatSuggestion();
+                        Console.WriteLine("Folgende Plaetze sind fuer Sie vorgesehen: {0}", seatSuggestion);
 
-
-                    Console.ReadKey();
-                    break;
-            }
+                        Console.ReadKey();
+                        break;
+                }
+            
         }
-
         static void Main(string[] args)
         //Sitzplaetze = 10 Reihen mit jeweils 20 Plaetzen
         {   //[Y,X] Achse
@@ -240,11 +291,17 @@ namespace MehrdimensionaleArrays
             sitzPlatzPosition[1,4] = true;
             sitzPlatzPosition[4,8] = true;
             sitzPlatzPosition[9,19] = true;
-            
-            Menu();
-            CheckInt();
 
-            SwitchOption();
+            
+            
+            do
+            {
+                Console.Clear();
+                Menu();
+                CheckInt();
+                SwitchOption();
+            } while (checkedInt != 0);
+            
         }
         
     }
