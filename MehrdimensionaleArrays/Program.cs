@@ -45,27 +45,33 @@ namespace MehrdimensionaleArrays
                 }
                 Console.WriteLine();
             }
-            Console.Read();
+            CheckInt();
         }
 
         private static void Menu()
         {
-            
-            Console.WriteLine("\t\tSitzplatzreservierung");
-            Console.WriteLine("Bitte Zahl eingeben");
+            Console.ForegroundColor = ConsoleColor.Yellow;
+            Console.WriteLine("\n\t\t\tSitzplatzreservierung");
+        
             Console.WriteLine();
-            Console.WriteLine("{0}) {1}", 1, "Zeige Platzbelegung");
-            Console.WriteLine("{0}) {1}", 2, "Sitzplatzreservierung");
+            Console.Write("{0}) {1}", 1, "Zeige Platzbelegung\t\t");
+            Console.Write("{0}) {1}", 2, "Sitzplatzreservierung\t\t");
+            Console.WriteLine("{0}) {1}",0,"Abbruch");
         }
         private static void CheckInt()
         {
+            string temp = "";
+            checkedInt = 0;
+            isNotValid = true;
             do
             {
+                Console.Write("Zahl eingeben: ");
+                temp = Console.ReadLine();
                 try
                 {
-                    checkedInt = int.Parse(Console.ReadLine());
+                    checkedInt = int.Parse(temp);
                     
-                    if (checkedInt == 0 || checkedInt > 2)
+                    if (checkedInt > 2)
                     {
                         Console.WriteLine("Die {0} ist keine gueltige Auswahl!",checkedInt);
                     }
@@ -94,7 +100,7 @@ namespace MehrdimensionaleArrays
                 try
                 {
                     seatOrderInt = int.Parse(Console.ReadLine());
-                    if (seatOrderInt < 1)
+                   if (seatOrderInt < 1)
                     {
                         Console.WriteLine(errMsgNegInt);
                     }
@@ -107,9 +113,9 @@ namespace MehrdimensionaleArrays
                     {
                         Console.Write("Sie koennen maximal {0} Sitze reservieren,jedoch keine {1}",freeSeatsinRow, seatOrderInt);
                     }
-                    else if (CountFreeSeatsInRow()<seatOrderInt)
+                    else if (freeSeatsinRow < seatOrderInt)
                     {
-                        
+                        Console.WriteLine("CountFreeSeatsInRow()<seatOrderInt");
                     }
                     else
                     {
@@ -164,11 +170,14 @@ namespace MehrdimensionaleArrays
         }
         public static void SeatSuggestion()
         {
+            
             for (int i = seatOrderInt; i != 0 ; i--)
             {
                 if (sitzPlatzPosition[rowOfSeats, i].Equals(false) )
                 {
-                    seatSuggestion +=i+","; 
+                    seatSuggestion +=i+",";
+                    
+                    sitzPlatzPosition[rowOfSeats, i] = true;
                 }
                 else
                 {
@@ -189,7 +198,37 @@ namespace MehrdimensionaleArrays
                 } 
             }
             return freeSeatsinRow;
-        }   
+        }
+
+        private static void SwitchOption()
+        {
+            switch (checkedInt)
+            {
+                case 0:
+                default:
+                    Console.WriteLine("Programm wird beendet...");
+                    Console.ReadKey();
+                    break;
+                case 1:
+                    ShowSeatAssignment();
+
+                    Menu();
+                    CheckInt();
+                    
+                    break;
+                case 2:
+
+                    Sitzplatzreservierung();
+                    SeatSuggestion();
+                    Console.WriteLine("Folgende Plaetze sind fuer Sie vorgesehen: {0}", seatSuggestion);
+                    Menu();
+                    CheckInt();
+
+
+                    Console.ReadKey();
+                    break;
+            }
+        }
 
         static void Main(string[] args)
         //Sitzplaetze = 10 Reihen mit jeweils 20 Plaetzen
@@ -202,22 +241,11 @@ namespace MehrdimensionaleArrays
             sitzPlatzPosition[4,8] = true;
             sitzPlatzPosition[9,19] = true;
             
-
             Menu();
             CheckInt();
 
-            switch (checkedInt)
-            {
-                case 1:
-                    ShowSeatAssignment();
-                    Console.ReadLine();
-                    break;
-                case 2:
-                    Sitzplatzreservierung();                  
-                    SeatSuggestion();
-                    Console.WriteLine(seatSuggestion); 
-                    break;
-            }
+            SwitchOption();
         }
+        
     }
 }
